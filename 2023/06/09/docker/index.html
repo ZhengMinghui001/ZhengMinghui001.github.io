@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="theme-color" content="#33474d">
+	<title>Docker安装 | Hexo</title>
+	<link rel="stylesheet" href="/css/style.css" />
+	
+      <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+	<header class="header">
+		<nav class="header__nav">
+			
+				<a href="/archives" class="header__link">Archive</a>
+			
+				<a href="/tags" class="header__link">Tags</a>
+			
+				<a href="/atom.xml" class="header__link">RSS</a>
+			
+		</nav>
+		<h1 class="header__title"><a href="/">Hexo</a></h1>
+		<h2 class="header__subtitle"></h2>
+	</header>
+
+	<main>
+		<article>
+	
+		<h1>Docker安装</h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2023-06-09</span><br />
+		
+		
+	</div>
+
+	
+
+	
+		<h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><h2 id="一、安装docker"><a href="#一、安装docker" class="headerlink" title="一、安装docker"></a>一、安装docker</h2><p>1.Centos安装Docker</p>
+<p>2.机器环境初始化<br>  如果之前安装过旧版本的Docker，先卸载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">yum remove docker \</span><br><span class="line">                  docker-client \</span><br><span class="line">                  docker-client-latest \</span><br><span class="line">                  docker-common \</span><br><span class="line">                  docker-latest \</span><br><span class="line">                  docker-latest-logrotate \</span><br><span class="line">                  docker-logrotate \</span><br><span class="line">                  docker-selinux \</span><br><span class="line">                  docker-engine-selinux \</span><br><span class="line">                  docker-engine \</span><br><span class="line">                  docker-ce</span><br></pre></td></tr></table></figure>
+<p>3.Yum原配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#备份配置文件</span><br><span class="line">mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup</span><br><span class="line"></span><br><span class="line">wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line"></span><br><span class="line">wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo</span><br><span class="line"></span><br><span class="line">yum clean all</span><br><span class="line">yum makecache</span><br><span class="line"></span><br><span class="line">#可选操作</span><br><span class="line">yum install -y bash-completion vim lrzsz wget expect net-tools nc nmap treedos2unix htop iftop iotop unzip telnet sl psmisc nethogs glances bc ntpdate openldap-devel</span><br></pre></td></tr></table></figure>
+<p>4.安装yum工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install -y yum-utils \</span><br><span class="line">           device-mapper-persistent-data \</span><br><span class="line">           lvm2 --skip-broken</span><br></pre></td></tr></table></figure>
+
+<p>5.配置网卡转发</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#1.docker必须安装在centos7平台，内核版本不低于3.10在centos平台运行docker可能会遇见些告警信息，修改内核配置参数，打开内核转发功能</span><br><span class="line">#写入</span><br><span class="line">cat &lt;&lt;EOF &gt; /etc/sysctl.d/docker.conf</span><br><span class="line">net.bridge.bridge-nf-call-ip6tables = 1</span><br><span class="line">net.bridge.bridge-nf-call-iptables = 1</span><br><span class="line">net.ipv4.conf.default.rp_filter = 0</span><br><span class="line">net.ipv4.conf.all.rp_filter = 0</span><br><span class="line">net.ipv4.ip_forward=1</span><br><span class="line">EOF</span><br><span class="line">#2.重新加载内核参数</span><br><span class="line">modprobe br_netfilter</span><br><span class="line">sysctl -p /etc/sysctl.d/docker.conf</span><br></pre></td></tr></table></figure>
+<p>6.利用yum进行dockers安装</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 提前配置好yum仓库</span><br><span class="line"># 1.阿里云自带仓库 2.阿里云提供的docker专属repo仓库</span><br><span class="line"></span><br><span class="line">curl -o /etc/yum.repos.d/docker-ce.repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line">curl -o /etc/yum.repos.d/Centos-7.repo http://mirrors.aliyun.com/repo/Centos-7.repo</span><br><span class="line">#更新yum缓存</span><br><span class="line">yum clean all &amp;&amp; yum makecache</span><br><span class="line">#可以直接yum安装docker了</span><br><span class="line">## 查看源中可用版本</span><br><span class="line">yum list docker-ce --showduplicates | sort -r</span><br><span class="line">## yum安装</span><br><span class="line">yum install docker-ce -y</span><br><span class="line">## 如果需要安装旧版本</span><br><span class="line">yum install -y docker-ce-20.10.6</span><br><span class="line">##查看docker版本，验证是否验证成功</span><br><span class="line">docker -v</span><br><span class="line">##如果要卸载</span><br><span class="line">yum remove -y docker-ce-xxx</span><br></pre></td></tr></table></figure>
+<p>7.配置镜像加速器</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#用于加速镜像文件下载,选用阿里云镜像站</span><br><span class="line">mkdir -p /etc/docker</span><br><span class="line">touch /etc/docker/daemon.json</span><br><span class="line">vim /etc/docker/daemon.json</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">&quot;registry-mirrors&quot; : [</span><br><span class="line">&quot;https://8xpk5wnt.mirror.aliyuncs.com&quot;</span><br><span class="line">]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>8.启动docker</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#启动docker前，一定要关闭防火墙后！！</span><br><span class="line"># 关闭</span><br><span class="line">systemctl stop firewalld</span><br><span class="line"># 禁止开机启动防火墙</span><br><span class="line">systemctl disable firewalld</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">##通过命令启动docker：</span><br><span class="line">#systemctl start docker  # 启动docker服务</span><br><span class="line">#systemctl stop docker  # 停止docker服务</span><br><span class="line">#systemctl restart docker  # 重启docker服务</span><br><span class="line"></span><br><span class="line">#我们使用如下命令进行docker启动</span><br><span class="line">##docker配置文件重新加载</span><br><span class="line">systemctl daemon-reload</span><br><span class="line">##设置开启自启动</span><br><span class="line">systemctl enable docker</span><br><span class="line">#启动docker</span><br><span class="line">systemctl start docker</span><br><span class="line"></span><br><span class="line">## 查看docker信息</span><br><span class="line">docker info</span><br><span class="line">docker ps</span><br><span class="line">docker images</span><br><span class="line">docker version</span><br><span class="line"></span><br><span class="line">## docker-client</span><br><span class="line">which docker</span><br><span class="line">## docker daemon</span><br><span class="line">ps aux |grep docker</span><br><span class="line">## containerd</span><br><span class="line">ps aux|grep containerd</span><br><span class="line">systemctl status containerd</span><br></pre></td></tr></table></figure>
+<p><figure class="figure"><img src="/../image-docker/1.png"></figure></p>
+<h2 id="二、docker基本操作"><a href="#二、docker基本操作" class="headerlink" title="二、docker基本操作"></a>二、docker基本操作</h2><p>1.运行镜像</p>
+<p>2.查看镜像是否在运行<br><figure class="figure"><img src="/../image-docker/2.png"></figure></p>
+<p>3.访问网站<br><figure class="figure"><img src="/../image-docker/3.png"></figure></p>
+<p>4.停止容器<br><figure class="figure"><img src="/../image-docker/4.png"></figure></p>
+<p>5.查看docker镜像的存储路径<br><figure class="figure"><img src="/../image-docker/9.png"></figure></p>
+<p>6.查看具体位置<br><figure class="figure"><img src="/../image-docker/10.png"></figure></p>
+<p>7.指定tag查看镜像</p>
+<p>docker images centos:7.8.2003<br><figure class="figure"><img src="/../image-docker/11.png"></figure></p>
+<p>8.只列出镜像id</p>
+<p>docker images -q</p>
+<p><figure class="figure"><img src="/../image-docker/12.png"></figure></p>
+<p>9.练习<br>需求：去DockerHub搜索并拉取一个Redis镜像<br>目标：<br>1）去DockerHub搜索Redis镜像</p>
+<p>2）查看Redis镜像的名称和版本</p>
+<p>3）利用docker pull命令拉取镜像</p>
+<p>4）利用docker save命令将 redis:latest打包为一个redis.tar包</p>
+<p><figure class="figure"><img src="/../image-docker/7.jpg"></figure></p>
+<p>5）利用docker rmi 删除本地的redis:latest</p>
+<p>6）利用docker load 重新加载 redis.tar文件<br><figure class="figure"><img src="/../image-docker/5.jpg"></figure></p>
+<h1 id="三、容器初体验"><a href="#三、容器初体验" class="headerlink" title="三、容器初体验"></a>三、容器初体验</h1><p>1.运行容器，且进入容器内，且在容器内执行某个命令<br>docker run -it centos:7.8.2003 sh<br><figure class="figure"><img src="/../image-docker/13.png"></figure></p>
+<p>cat &#x2F;etc&#x2F;redhat-release<br><figure class="figure"><img src="/../image-docker/14.png"></figure></p>
+<p>2.数据卷操作</p>
+<p>查看所有数据：docker volume ls<br><figure class="figure"><img src="/../image-docker/5.jpg"></figure></p>
+<p>创建数据卷：docker volume create html<br><figure class="figure"><img src="/../image-docker/8.png"></figure></p>
+<p>可以看到我们创建的html这个数据卷关联的宿主机目录为：<br>&#x2F;var&#x2F;lib&#x2F;docker&#x2F;volume&#x2F;html&#x2F;_data目录。</p>
+
+	
+
+	
+		<span class="different-posts"><a href="/2023/06/09/docker/" onclick="window.history.go(-1); return false;">⬅️ Go back </a></span>
+
+	
+
+</article>
+
+	</main>
+
+	<footer class="footer">
+	<div class="footer-content">
+		
+	      <div class="footer__element">
+	<p>Hi there, <br />welcome to my Blog glad you found it. Have a look around, will you?</p>
+</div>
+
+	    
+	      <div class="footer__element">
+	<h5>Check out</h5>
+	<ul class="footer-links">
+		<li class="footer-links__link"><a href="/archives">Archive</a></li>
+		
+		  <li class="footer-links__link"><a href="/atom.xml">RSS</a></li>
+	    
+		<li class="footer-links__link"><a href="/about">about page</a></li>
+		<li class="footer-links__link"><a href="/tags">Tags</a></li>
+		<li class="footer-links__link"><a href="/categories">Categories</a></li>
+	</ul>
+</div>
+
+	    
+
+		<div class="footer-credit">
+			<span>© 2023 John Doe | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/HoverBaum/meilidu-hexo">MeiliDu</a></span>
+		</div>
+
+	</div>
+
+
+</footer>
+
+
+
+</body>
+
+</html>

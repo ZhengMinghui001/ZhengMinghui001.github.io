@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="theme-color" content="#33474d">
+	<title>Pyspark基础编码环境 | Hexo</title>
+	<link rel="stylesheet" href="/css/style.css" />
+	
+      <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+	<header class="header">
+		<nav class="header__nav">
+			
+				<a href="/archives" class="header__link">Archive</a>
+			
+				<a href="/tags" class="header__link">Tags</a>
+			
+				<a href="/atom.xml" class="header__link">RSS</a>
+			
+		</nav>
+		<h1 class="header__title"><a href="/">Hexo</a></h1>
+		<h2 class="header__subtitle"></h2>
+	</header>
+
+	<main>
+		<article>
+	
+		<h1>Pyspark基础编码环境</h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2023-06-12</span><br />
+		
+			<span class="article__category">
+				<a class="article-category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+			</span><br />
+		
+		
+			<span class="article__tags">
+			  	<a class="article__tag-none-link" href="/tags/spark/" rel="tag">spark</a> <a class="article__tag-none-link" href="/tags/%E6%90%AD%E5%BB%BA/" rel="tag">搭建</a>
+			</span>
+		
+	</div>
+
+	
+
+	
+		<h1 id="Pyspark基础编码环境"><a href="#Pyspark基础编码环境" class="headerlink" title="Pyspark基础编码环境"></a>Pyspark基础编码环境</h1><h2 id="一、本地pysaprk环境配置"><a href="#一、本地pysaprk环境配置" class="headerlink" title="一、本地pysaprk环境配置"></a>一、本地pysaprk环境配置</h2><p>1、在出现的Anaconda命令行界面输入以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 创建虚拟环境 pyspark, 基于Python 3.8</span><br><span class="line"></span><br><span class="line">conda activate base</span><br><span class="line"></span><br><span class="line">conda create -n pyspark python=3.8</span><br><span class="line"></span><br><span class="line"># 切换到虚拟环境内</span><br><span class="line">conda activate pyspark</span><br><span class="line"></span><br><span class="line"># 在虚拟环境内安装包</span><br><span class="line">pip install pyspark==3.2.0 -i https://pypi.tuna.tsinghua.edu.cn/simple</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>2、Windows系统配置Anaconda<br>在资料里下载安装Anaconda3<br><figure class="figure"><img src="/../image-sparkonyarn/3.png"></figure></p>
+<p>看到如下图，则安装成功<br><figure class="figure"><img src="/../image-sparkonyarn/4.png"></figure></p>
+<p>3、打开上图中的 Anaconda Prompt程序，执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4.conda config --set show_channel_urls yes</span><br></pre></td></tr></table></figure>
+<p>用记事本打开C:\Users\用户名.condarc文件<br><figure class="figure"><img src="/../image-sparkonyarn/5.png"></figure></p>
+<p>将如下内容替换进文件内,保存即可:（若没有则自行创建）<br><figure class="figure"><img src="/../image-sparkonyarn/6.png"></figure></p>
+<h2 id="二、安装Pycharm专业版"><a href="#二、安装Pycharm专业版" class="headerlink" title="二、安装Pycharm专业版"></a>二、安装Pycharm专业版</h2><h2 id="三、Pycharm配置Python解释器"><a href="#三、Pycharm配置Python解释器" class="headerlink" title="三、Pycharm配置Python解释器"></a>三、Pycharm配置Python解释器</h2><p>1、配置pycharm本地python解释器<br>在pycharm中点击：</p>
+<p>文件-设置-项目-Python解释器-点击右侧齿轮-Virtualenv环境<br><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/1.png"></figure></p>
+<p>Conda环境：<br><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/2.png"></figure></p>
+<p>2.配置远程 SSH Linux 解释器<br><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/3.png"></figure><br><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/4.png"></figure></p>
+<p>3、选择远程链接的解释器位置<br>&#x2F;export&#x2F;server&#x2F;anaconda3&#x2F;envs&#x2F;pyspark&#x2F;bin&#x2F;python3.8<br><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/5.png"></figure></p>
+<p>4、查看虚拟机上是否同步pycharm中的文件<br><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/6.png"></figure></p>
+<p><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/7.png"></figure></p>
+<p>5、WordCount 代码实战<br>(1)本地准备文件 word.txt</p>
+<p><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/8.png"></figure></p>
+<p>运行结果<br><figure class="figure"><img src="/../image-pysaprk%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/9.png"></figure></p>
+
+	
+
+	
+		<span class="different-posts"><a href="/2023/06/12/Pyspark%E5%9F%BA%E7%A1%80%E7%BC%96%E7%A0%81%E7%8E%AF%E5%A2%83/" onclick="window.history.go(-1); return false;">⬅️ Go back </a></span>
+
+	
+
+</article>
+
+	</main>
+
+	<footer class="footer">
+	<div class="footer-content">
+		
+	      <div class="footer__element">
+	<p>Hi there, <br />welcome to my Blog glad you found it. Have a look around, will you?</p>
+</div>
+
+	    
+	      <div class="footer__element">
+	<h5>Check out</h5>
+	<ul class="footer-links">
+		<li class="footer-links__link"><a href="/archives">Archive</a></li>
+		
+		  <li class="footer-links__link"><a href="/atom.xml">RSS</a></li>
+	    
+		<li class="footer-links__link"><a href="/about">about page</a></li>
+		<li class="footer-links__link"><a href="/tags">Tags</a></li>
+		<li class="footer-links__link"><a href="/categories">Categories</a></li>
+	</ul>
+</div>
+
+	    
+
+		<div class="footer-credit">
+			<span>© 2023 John Doe | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/HoverBaum/meilidu-hexo">MeiliDu</a></span>
+		</div>
+
+	</div>
+
+
+</footer>
+
+
+
+</body>
+
+</html>

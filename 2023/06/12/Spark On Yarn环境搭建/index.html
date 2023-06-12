@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="theme-color" content="#33474d">
+	<title>Spark On Yarn | Hexo</title>
+	<link rel="stylesheet" href="/css/style.css" />
+	
+      <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+
+	<header class="header">
+		<nav class="header__nav">
+			
+				<a href="/archives" class="header__link">Archive</a>
+			
+				<a href="/tags" class="header__link">Tags</a>
+			
+				<a href="/atom.xml" class="header__link">RSS</a>
+			
+		</nav>
+		<h1 class="header__title"><a href="/">Hexo</a></h1>
+		<h2 class="header__subtitle"></h2>
+	</header>
+
+	<main>
+		<article>
+	
+		<h1>Spark On Yarn</h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2023-06-12</span><br />
+		
+			<span class="article__category">
+				<a class="article-category-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a>
+			</span><br />
+		
+		
+			<span class="article__tags">
+			  	<a class="article__tag-none-link" href="/tags/spark/" rel="tag">spark</a> <a class="article__tag-none-link" href="/tags/%E6%90%AD%E5%BB%BA/" rel="tag">搭建</a>
+			</span>
+		
+	</div>
+
+	
+
+	
+		<h1 id="Spark-On-Yarn"><a href="#Spark-On-Yarn" class="headerlink" title="Spark On Yarn"></a>Spark On Yarn</h1><p>确保Hadoop_CONF_DIR和YARN_CONF_DIR在spark-env.sh以及环境变量配置文件即可。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd /export/server/spark/</span><br><span class="line"></span><br><span class="line">vim spark-env.sh</span><br></pre></td></tr></table></figure>
+<p><figure class="figure"><img src="/../image-sparkonyarn/7.png"></figure></p>
+<p>1、将资料里的Anaconda3-2021.05-Linux-x86_64.sh放到&#x2F;export&#x2F;server路径下<br><figure class="figure"><img src="/../image-sparkonyarn/1.png"></figure></p>
+<p>运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh ./Anaconda3-2021.05-Linux-x86_64.sh</span><br></pre></td></tr></table></figure>
+<p>在刚开始运行使需要多点几次空格或者直接回车<br>接下来会出现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Do you accept the license terms? [yes|no]</span><br><span class="line">[no]&gt;&gt;&gt;yes</span><br><span class="line"></span><br><span class="line">Anaconda3 will now be installed into this location:</span><br><span class="line">[/root/anaconda3]&gt;&gt;&gt;/export/server/anaconda3</span><br><span class="line"></span><br><span class="line">Do you wish the installer to initialize Anaconda3 by running conda init ?[yes|no]</span><br><span class="line">[no]&gt;&gt;&gt;  yes</span><br><span class="line">输入yes后就安装完成了.</span><br><span class="line">安装完成后，断开连接重新连接 </span><br></pre></td></tr></table></figure>
+
+<p>看到base开头表明安装成功<br>base是默认的虚拟环境<br><figure class="figure"><img src="/../image-sparkonyarn/2.png"></figure></p>
+<p>2、Windows系统配置Anaconda<br>在资料里下载安装Anaconda3<br><figure class="figure"><img src="/../image-sparkonyarn/3.png"></figure></p>
+<p>看到如下图，则安装成功<br><figure class="figure"><img src="/../image-sparkonyarn/4.png"></figure></p>
+<p>3、打开上图中的 Anaconda Prompt程序，执行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">4.conda config --set show_channel_urls yes</span><br></pre></td></tr></table></figure>
+<p>用记事本打开C:\Users\用户名.condarc文件<br><figure class="figure"><img src="/../image-sparkonyarn/5.png"></figure></p>
+<p>将如下内容替换进文件内,保存即可:（若没有则自行创建）<br><figure class="figure"><img src="/../image-sparkonyarn/6.png"></figure></p>
+<p>4、Client模式测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SPARK_HOME=/export/server/spark $&#123;SPARK_HOME&#125;/bin/spark-submit --master yarn --deploy-mode client --driver-memory 512m --executor-memory 512m --num-executors 1 --total-executor-cores 2 $&#123;SPARK_HOME&#125;/examples/src/main/python/pi.py 10</span><br></pre></td></tr></table></figure>
+<p><figure class="figure"><img src="/../image-sparkonyarn/8.png"></figure></p>
+<p>6、cluster模式测试</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$&#123;SPARK_HOME&#125;/bin/spark-submit --master yarn --deploy-mode cluster --driver-memory 512m --executor-memory 512m --num-executors 1 --total-executor-cores 2 --conf &quot;spark.pyspark.driver.python=/export/server/anaconda3/bin/python3&quot; --conf &quot;spark.pyspark.python=/export/server/anaconda3/bin/python3&quot; $&#123;SPARK_HOME&#125;/examples/src/main/python/pi.py 10</span><br></pre></td></tr></table></figure>
+<p><figure class="figure"><img src="/../image-sparkonyarn/9.png"></figure></p>
+
+	
+
+	
+		<span class="different-posts"><a href="/2023/06/12/Spark%20On%20Yarn%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" onclick="window.history.go(-1); return false;">⬅️ Go back </a></span>
+
+	
+
+</article>
+
+	</main>
+
+	<footer class="footer">
+	<div class="footer-content">
+		
+	      <div class="footer__element">
+	<p>Hi there, <br />welcome to my Blog glad you found it. Have a look around, will you?</p>
+</div>
+
+	    
+	      <div class="footer__element">
+	<h5>Check out</h5>
+	<ul class="footer-links">
+		<li class="footer-links__link"><a href="/archives">Archive</a></li>
+		
+		  <li class="footer-links__link"><a href="/atom.xml">RSS</a></li>
+	    
+		<li class="footer-links__link"><a href="/about">about page</a></li>
+		<li class="footer-links__link"><a href="/tags">Tags</a></li>
+		<li class="footer-links__link"><a href="/categories">Categories</a></li>
+	</ul>
+</div>
+
+	    
+
+		<div class="footer-credit">
+			<span>© 2023 John Doe | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/HoverBaum/meilidu-hexo">MeiliDu</a></span>
+		</div>
+
+	</div>
+
+
+</footer>
+
+
+
+</body>
+
+</html>
